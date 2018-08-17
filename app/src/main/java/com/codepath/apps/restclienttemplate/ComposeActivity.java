@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -21,11 +24,37 @@ public class ComposeActivity extends AppCompatActivity {
     TwitterClient client;
     Context context;
 
+    EditText post;
+    TextView charCount;
+
+    private final TextWatcher mTextEditorWatcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //This sets a textview to the current length
+            int chars = 140-s.length();
+            if (chars <=0){
+                post.setInputType(0);
+            }
+            charCount.setText(String.valueOf(chars));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
         client = TwitterApp.getRestClient(this);
+        post = (EditText) findViewById(R.id.etPost);
+        charCount = (TextView) findViewById(R.id.tvCharacterCount);
+        post.addTextChangedListener(mTextEditorWatcher);
+        setTitle("");
+
     }
 
 
@@ -36,8 +65,7 @@ public class ComposeActivity extends AppCompatActivity {
     }
 
     public void tweet(View v){
-        EditText et =  (EditText) findViewById(R.id.etPost);
-        String message = et.getText().toString();
+        String message = post.getText().toString();
         context = v.getContext();
 
         if (!getIntent().getBooleanExtra("reply", false)){
@@ -80,4 +108,11 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
     }
+
+    /*public void back(View v){
+        Intent intent = new Intent(v.getContext(), TimelineActivity.class);
+        startActivity(intent);
+    }*/
+
+
 }

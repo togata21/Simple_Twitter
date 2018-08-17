@@ -15,7 +15,8 @@
         android:layout_margin="10dp"
         android:ems="10"
         android:hint="Post"
-        android:inputType="textPersonName" />
+        android:inputType="textMultiLine"
+         />
 
     <TextView
         android:id="@+id/tvCharacterCount"
@@ -35,5 +36,19 @@
         android:layout_alignBottom="@id/tvCharacterCount"
         android:layout_alignEnd="@id/etPost"
         android:onClick="tweet"
+        android:backgroundTint="#25acea"
+        android:textColor="#ffffff"
         android:text="Tweet" />
+
+    <Button
+        android:id="@+id/bBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/etPost"
+        android:layout_alignTop="@id/bPostTweet"
+        android:layout_marginStart="15dp"
+        android:backgroundTint="#25acea"
+        android:textColor="#ffffff"
+        android:text="Back" />
+
 </RelativeLayout>

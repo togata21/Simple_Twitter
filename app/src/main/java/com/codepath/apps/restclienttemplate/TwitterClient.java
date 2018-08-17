@@ -2,7 +2,6 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Toast;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.github.scribejava.apis.TwitterApi;
@@ -101,7 +100,6 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("id", id);
         client.post(apiUrl, params, handler);
-		Toast.makeText(v.getContext(), id+" id", Toast.LENGTH_SHORT).show();
     }
 
 	public void unretweet(long id, View v, AsyncHttpResponseHandler handler) {
@@ -109,15 +107,13 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("id", id);
 		client.post(apiUrl, params, handler);
-		Toast.makeText(v.getContext(), id+" id", Toast.LENGTH_SHORT).show();
 	}
 
 	public void favorite(long id, View v, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("favorites/create.json");
 		RequestParams params = new RequestParams();
 		params.put("id", id);
-		client.post(apiUrl, params, handler);
-		Toast.makeText(v.getContext(), id+" id", Toast.LENGTH_SHORT).show();
+		client.post(apiUrl, params, handler);;
 	}
 
 	public void unFavorite(long id, View v, AsyncHttpResponseHandler handler) {
@@ -125,6 +121,5 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("id", id);
 		client.post(apiUrl, params, handler);
-		Toast.makeText(v.getContext(), id+" id", Toast.LENGTH_SHORT).show();
 	}
 }

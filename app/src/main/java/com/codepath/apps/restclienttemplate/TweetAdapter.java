@@ -60,9 +60,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         Tweet tweet = mTweets.get(position);
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
-        //holder.tvDate.setText(getRelativeTimeAgo(tweet.createdAt));
         holder.tvHandle.setText("@"+tweet.user.screenName + "  ·  "+getRelativeTimeAgo(tweet.createdAt));
-
         Glide.with(context)
                 .load(tweet.user.profileImageUrl)
                 .apply(RequestOptions.circleCropTransform())
@@ -72,7 +70,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
             holder.ibFavorite.setImageResource(R.drawable.ic_vector_heart);
         if (tweet.retweeted==true)
             holder.ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
-
     }
 
     @Override
@@ -102,7 +99,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     Tweet reply_tweet = mTweets.get(position);
-                    Toast.makeText(v.getContext(), position+" reply", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(v.getContext(), ComposeActivity.class);
                     intent.putExtra("reply", true);
                     intent.putExtra("uid", reply_tweet.uid);
@@ -119,13 +115,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                     Tweet retweet = mTweets.get(position);
                     if (retweet.retweeted == false) {
                         retweet.retweeted = true;
-                        Toast.makeText(v.getContext(), position + " retweet", Toast.LENGTH_SHORT).show();
-
                         TwitterClient client = TwitterApp.getRestClient(v.getContext());
                         client.retweet(retweet.uid, v, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "retweet", Toast.LENGTH_SHORT).show();
                                 ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
 
                                 Intent intent = new Intent(context, TimelineActivity.class);
@@ -143,13 +137,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                     }
                     else{
                         retweet.retweeted = false;
-                        Toast.makeText(v.getContext(), position + " retweet", Toast.LENGTH_SHORT).show();
-
                         TwitterClient client = TwitterApp.getRestClient(v.getContext());
                         client.unretweet(retweet.uid, v, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "unretweet", Toast.LENGTH_SHORT).show();
                                 ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
 
                                 Intent intent = new Intent(context, TimelineActivity.class);
@@ -174,24 +166,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     Tweet retweet = mTweets.get(position);
-
-
-
                     TwitterClient client = TwitterApp.getRestClient(v.getContext());
                     if (!retweet.favorite) {
                         ibFavorite.setImageResource(R.drawable.ic_vector_heart);
                         retweet.favorite = true;
-                        Toast.makeText(v.getContext(), position+" favorite", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(v.getContext(), position+" favorite", Toast.LENGTH_SHORT).show();
                         client.favorite(retweet.uid, v, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-
-
+                                Toast.makeText(context, "favorite", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, TimelineActivity.class);
-
                                 Activity temp = (Activity) context;
-                                //temp.startActivity(intent);
                             }
 
                             @Override
@@ -201,20 +186,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                                 throwable.printStackTrace();
                             }
                         });
-                        //ibFavorite.setBackgroundColor(180);
                     }
                     else{
-                        Toast.makeText(v.getContext(), position+" unfavorite", Toast.LENGTH_SHORT).show();
                         ibFavorite.setImageResource(R.drawable.ic_vector_heart_stroke);
                         retweet.favorite = false;
                         client.unFavorite(retweet.uid, v, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "unfavorite", Toast.LENGTH_SHORT).show();
 
                                 Intent intent = new Intent(context, TimelineActivity.class);
                                 Activity temp = (Activity) context;
-                                temp.startActivity(intent);
                             }
 
                             @Override
@@ -224,16 +206,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                                 throwable.printStackTrace();
                             }
                         });
-                        //ibFavorite.setBackgroundColor(0);
                     }
                 }
             });
-
         }
-
-
-
-
     }
 
 
@@ -260,16 +236,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         return newDate;
     }
 
-
-    /* Within the RecyclerView.Adapter class */
-
-    // Clean all elements of the recycler
     public void clear() {
         mTweets.clear();
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(List<Tweet> list) {
         mTweets.addAll(list);
         notifyDataSetChanged();
